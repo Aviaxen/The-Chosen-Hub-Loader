@@ -1,0 +1,149 @@
+--if you want to use this ui, you can now join discord.gg/rTw5M8dRXN
+--ui made from xvc hub owners, credits to them the link to their discord is at the top i have no discord!!!
+
+local Settings = {
+    SelectedLibrary = nil, 
+    AutoLoad = false
+}
+
+-- Safe File Checking System
+local function SafeLoadSettings()
+    if pcall(function() return readfile and readfile("XVCHubSettings.json") end) then
+        local fileData = readfile("XVCHubSettings.json")
+        if fileData and fileData ~= "" then
+            local success, decoded = pcall(function()
+                return game:GetService("HttpService"):JSONDecode(fileData)
+            end)
+            if success and decoded then
+                Settings = decoded
+            end
+        end
+    end
+end
+SafeLoadSettings()
+
+-- Direct AutoLoad Handler (Bypasses the broken main files)
+if Settings.SelectedLibrary and Settings.AutoLoad then
+    local downloadSuccess, scriptData
+    if Settings.SelectedLibrary == "Windui" then
+        downloadSuccess, scriptData = pcall(function()
+            return game:HttpGet("https://githubusercontent.com")
+        end)
+    elseif Settings.SelectedLibrary == "Rayfield" then
+        downloadSuccess, scriptData = pcall(function()
+            return game:HttpGet("https://githubusercontent.com")
+        end)
+    end
+    
+    if downloadSuccess and scriptData then
+        loadstring(scriptData)()
+        return
+    end
+end
+
+-- Simplified UI Parenting Layer to force presentation
+local XVCHubLoader = Instance.new("ScreenGui")
+XVCHubLoader.Name = "XVCHubLoader_" .. tostring(math.random(1000, 9999))
+XVCHubLoader.ResetOnSpawn = false
+XVCHubLoader.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local gethui = gethui or get_hidden_gui
+if gethui then
+    XVCHubLoader.Parent = gethui()
+elseif game:GetService("CoreGui"):FindFirstChildWhichIsA("ScreenGui") then
+    XVCHubLoader.Parent = game:GetService("CoreGui")
+else
+    XVCHubLoader.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+end
+
+-- MAIN INTERFACE FRAME
+local Frame = Instance.new("Frame")
+Frame.Parent = XVCHubLoader
+Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Frame.BackgroundTransparency = 0.05
+Frame.BorderSizePixel = 0
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+Frame.Position = UDim2.new(0.5, 0, 0.5, 0) 
+Frame.Size = UDim2.new(0, 360, 0, 180) 
+Frame.Visible = true
+
+local UICorner_Main = Instance.new("UICorner")
+UICorner_Main.CornerRadius = UDim.new(0, 9)
+UICorner_Main.Parent = Frame
+
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.Position = UDim2.new(0, 0, 0.1, 0)
+TextLabel.Size = UDim2.new(1, 0, 0.25, 0)
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.Text = "Which Library do you prefer?"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 19.000
+
+local buttonsenabled = true
+
+local function SaveSettings()
+    if pcall(function() return writefile end) then
+        writefile("XVCHubSettings.json", game:GetService("HttpService"):JSONEncode(Settings))
+    end
+end
+
+-- WIND UI SELECTION (Points to core source)
+local LunaButton = Instance.new("TextButton")
+LunaButton.Name = "WinduiButton"
+LunaButton.Parent = Frame
+LunaButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+LunaButton.Position = UDim2.new(0.06, 0, 0.45, 0)
+LunaButton.Size = UDim2.new(0.4, 0, 0.3, 0)
+LunaButton.Font = Enum.Font.SourceSansBold
+LunaButton.Text = "Wind UI Library"
+LunaButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+LunaButton.TextSize = 15.000
+
+local UICorner_W = Instance.new("UICorner")
+UICorner_W.CornerRadius = UDim.new(0, 6)
+UICorner_W.Parent = LunaButton
+
+LunaButton.MouseButton1Down:Connect(function()
+    if not buttonsenabled then return end
+    buttonsenabled = false
+    Settings.SelectedLibrary = "Windui"
+    SaveSettings()
+    XVCHubLoader:Destroy()
+    
+    local success, content = pcall(function()
+        return game:HttpGet("https://raw.githubusercontent.com/Aviaxen/The-Chosen-Hub-Windui/refs/heads/main/The%20Chosen%20Hub")
+    end)
+    if success then loadstring(content)() else warn("Failed to download WindUI core source code") end
+end)
+
+-- RAYFIELD SELECTION (Points to core source)
+local RayfieldButton = Instance.new("TextButton")
+RayfieldButton.Name = "RayfieldButton"
+RayfieldButton.Parent = Frame
+RayfieldButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+RayfieldButton.Position = UDim2.new(0.54, 0, 0.45, 0)
+RayfieldButton.Size = UDim2.new(0.4, 0, 0.3, 0)
+RayfieldButton.Font = Enum.Font.SourceSansBold
+RayfieldButton.Text = "Rayfield Library"
+RayfieldButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+RayfieldButton.TextSize = 15.000
+
+local UICorner_R = Instance.new("UICorner")
+UICorner_R.CornerRadius = UDim.new(0, 6)
+UICorner_R.Parent = RayfieldButton
+
+RayfieldButton.MouseButton1Down:Connect(function()
+    if not buttonsenabled then return end
+    buttonsenabled = false
+    Settings.SelectedLibrary = "Rayfield"
+    SaveSettings()
+    XVCHubLoader:Destroy()
+    
+    local success, content = pcall(function()
+        return game:HttpGet("https://raw.githubusercontent.com/Aviaxen/The-Chosen-Hub/refs/heads/main/The%20Chosen%20Hub")
+    end)
+    if success then loadstring(content)() else warn("Failed to download Rayfield core source code") end
+end)
