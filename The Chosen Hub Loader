@@ -158,7 +158,7 @@ local buttonsEnabled = true
 CreateLibraryButton(
     "Rayfield",
     UDim2.new(0.028, 0, 0.383, 0),
-    "Rayfield Library - Recommended for PC",
+    "Rayfield Library - Recommended for Mobile And Pc",
     function()
         if not buttonsEnabled then
             return
@@ -182,7 +182,7 @@ CreateLibraryButton(
 CreateLibraryButton(
     "WindUI",
     UDim2.new(0.556, 0, 0.383, 0),
-    "WindUI Library - Good for Mobile and PC",
+    "WindUI Library - Good for Mobile and PC (Less Scripts Cause Discontinued)",
     function()
         if not buttonsEnabled then
             return
